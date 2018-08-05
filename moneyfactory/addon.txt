@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+	"name"				"Money Factory"
+	"version"			"1"
+	"up_date"			"04/12/2017"
+	"author_name"			"Cpt Rawr"
+	"info"				"Money factory which prints money, takes paper and ink."
+	"override"			"0"
+}

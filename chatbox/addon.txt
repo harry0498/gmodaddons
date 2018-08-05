@@ -1,0 +1,11 @@
+"AddonInfo"
+{
+	"name"				"DarkRP Hud"
+	"version"			"1"
+	"up_date"			"00/00/00"
+	"author_name"			"n/a"
+	"author_email"			"n/a"
+	"author_url"			"n/a"
+	"info"				"DarkRP HUD"
+	"override"			"0"
+}

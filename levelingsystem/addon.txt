@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+	"name"				"Leveling System"
+	"version"			"1"
+	"up_date"			"04/12/2017"
+	"author_name"			"Cpt Rawr"
+	"info"				"Level system for darkrp."
+	"override"			"0"
+}

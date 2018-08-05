@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+	"name"				"Mining System"
+	"version"			"1"
+	"up_date"			"04/12/2017"
+	"author_name"			"Cpt Rawr"
+	"info"				"Mine ores and sell them to the NPC for money."
+	"override"			"0"
+}
