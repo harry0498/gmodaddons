@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+	"name"				"MaterialIcons"
+	"version"			"1"
+	"up_date"			"07/06/2020"
+	"author_name"			"Cpt Rawr"
+	"info"				"Material Icon Font"
+	"override"			"0"
+}
