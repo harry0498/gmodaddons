@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+	"name"				"GComputers"
+	"version"			"1"
+	"up_date"			"01/06/2020"
+	"author_name"			"Cpt Rawr"
+	"info"				"Customizable computers"
+	"override"			"0"
+}
