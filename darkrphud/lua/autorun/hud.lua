@@ -115,17 +115,15 @@ hook.Add(
         }
 
         --Background--
-        draw.RoundedBox(0, padding, ScrH() - padding - 200, 350, 200, Color(0, 0, 0, 200))
-
-        --Name Text--
-        draw.SimpleText("Name: " .. ply:Nick(), "Trebuchet24", padding + margin, (ScrH() - padding - 180), Color(255, 255, 255), 0, 1)
+        draw.RoundedBox(0, padding, ScrH() - padding - 170, 350, 170, Color(0, 0, 0, 200))
 
         --Job Name--
         draw.SimpleText("Job: " .. ply:getDarkRPVar("job"), "Trebuchet24", padding + margin, (ScrH() - padding - 150), Color(255, 255, 255), 0, 1)
 
         --Money info--
-        draw.SimpleText("Money: £" .. string.Comma(ply:getDarkRPVar("money")), "Trebuchet24", padding + margin, (ScrH() - padding - 120), Color(255, 255, 255), 0, 1)
-        draw.SimpleText("Salary: £" .. string.Comma(ply:getDarkRPVar("salary")), "Trebuchet24", padding + margin, (ScrH() - padding - 90), Color(255, 255, 255), 0, 1)
+        draw.SimpleText("Wallet: " .. GAMEMODE.Config.currency .. string.Comma(ply:getDarkRPVar("money")), "Trebuchet24", padding + margin, (ScrH() - padding - 120), Color(255, 255, 255), 0, 1)
+        local salaryPerMin = (ply:getDarkRPVar("salary") / GAMEMODE.Config.paydelay) * 60
+        draw.SimpleText("Salary: " .. GAMEMODE.Config.currency .. string.Comma(salaryPerMin) .. "/min", "Trebuchet24", padding + margin, (ScrH() - padding - 90), Color(255, 255, 255), 0, 1)
 
         --Health Bar--
         draw.RoundedBox(0, padding + margin, (ScrH() - padding - 70), 291, 26, Color(0, 0, 0, 200))
@@ -142,11 +140,6 @@ hook.Add(
         draw.SimpleText("Armour: " .. math.Round(((armour / maxarmour) * 100), 1) .. "%", "HudHintTextLarge", padding + margin + 3 + (285 / 2), (ScrH() - padding - 40 + 2 + 10), Color(255, 255, 255), 1, 1)
 
         --Icons--
-
-        --Name--
-        surface.SetMaterial(Material(icons[1]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 180 - 10), 18, 18)
 
         --Job--
         surface.SetMaterial(Material(icons[2]))
