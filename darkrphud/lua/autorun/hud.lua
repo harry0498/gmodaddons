@@ -9,6 +9,15 @@ local hide = {
     ["CHudSecondaryAmmo"] = true
 }
 
+surface.CreateFont("MaterialIcons", {
+	font = "Material Icons",
+	size =26,
+	weight = 300,
+	antialias = true,
+	outline = false,
+	extended = true,
+})
+
 surface.CreateFont(
     "AmmoFont1",
     {
@@ -115,77 +124,55 @@ hook.Add(
         }
 
         --Background--
-        draw.RoundedBox(0, padding, ScrH() - padding - 170, 350, 170, Color(0, 0, 0, 200))
+        draw.RoundedBox(0, padding, ScrH() - padding - 140, 350, 140, Color(0, 0, 0, 200))
 
         --Job Name--
-        draw.SimpleText("Job: " .. ply:getDarkRPVar("job"), "Trebuchet24", padding + margin, (ScrH() - padding - 150), Color(255, 255, 255), 0, 1)
+        draw.SimpleText(ply:getDarkRPVar("job"), "Trebuchet24", padding + margin, (ScrH() - padding - 120), Color(255, 255, 255), 0, 1)
 
         --Money info--
-        draw.SimpleText("Wallet: " .. GAMEMODE.Config.currency .. string.Comma(ply:getDarkRPVar("money")), "Trebuchet24", padding + margin, (ScrH() - padding - 120), Color(255, 255, 255), 0, 1)
+        local walletWidth, walletHeight = draw.SimpleText(GAMEMODE.Config.currency .. string.Comma(ply:getDarkRPVar("money")), "Trebuchet24", padding + margin, (ScrH() - padding - 90), Color(255, 255, 255), 0, 1)
         local salaryPerMin = (ply:getDarkRPVar("salary") / GAMEMODE.Config.paydelay) * 60
-        draw.SimpleText("Salary: " .. GAMEMODE.Config.currency .. string.Comma(salaryPerMin) .. "/min", "Trebuchet24", padding + margin, (ScrH() - padding - 90), Color(255, 255, 255), 0, 1)
+        draw.SimpleText(GAMEMODE.Config.currency .. string.Comma(salaryPerMin) .. "/min", "Trebuchet24", padding + margin + walletWidth + 30, (ScrH() - padding - 90), Color(255, 255, 255), 0, 1)
 
         --Health Bar--
         draw.RoundedBox(0, padding + margin, (ScrH() - padding - 70), 291, 26, Color(0, 0, 0, 200))
-        draw.RoundedBox(0, padding + margin + 3, (ScrH() - padding - 70 + 3), math.Clamp(((health / maxhealth) * 285), 0, 285), 20, Color(255, 0, 0))
+        draw.RoundedBox(0, padding + margin + 3, (ScrH() - padding - 70 + 3), math.Clamp(((health / maxhealth) * 285), 0, 285), 20, Color(231, 76, 60))
 
         --Armour Bar--
         draw.RoundedBox(0, padding + margin, (ScrH() - padding - 40), 291, 26, Color(0, 0, 0, 200))
-        draw.RoundedBox(0, padding + margin + 3, (ScrH() - padding - 40 + 3), math.Clamp(((armour / maxarmour) * 285), 0, 285), 20, Color(0, 128, 255))
+        draw.RoundedBox(0, padding + margin + 3, (ScrH() - padding - 40 + 3), math.Clamp(((armour / maxarmour) * 285), 0, 285), 20, Color(52, 152, 219))
 
         --Health Text--
-        draw.SimpleText("Health: " .. math.Clamp(health, 0, maxhealth) .. "/" .. maxhealth .. " (" .. math.Round(((math.Clamp(health, 0, maxhealth) / maxhealth) * 100), 1) .. "%)", "HudHintTextLarge", padding + margin + 3 + (285 / 2), (ScrH() - padding - 70 + 2 + 10), Color(255, 255, 255), 1, 1)
+        draw.SimpleText(math.Round(((math.Clamp(health, 0, maxhealth) / maxhealth) * 100), 1) .. "%", "Trebuchet24", padding + margin + 3 + (285 / 2), (ScrH() - padding - 70 + 2 + 10), Color(255, 255, 255), 1, 1)
 
         --Armour Efficency--
-        draw.SimpleText("Armour: " .. math.Round(((armour / maxarmour) * 100), 1) .. "%", "HudHintTextLarge", padding + margin + 3 + (285 / 2), (ScrH() - padding - 40 + 2 + 10), Color(255, 255, 255), 1, 1)
+        draw.SimpleText(math.Round(((armour / maxarmour) * 100), 1) .. "%", "Trebuchet24", padding + margin + 3 + (285 / 2), (ScrH() - padding - 40 + 2 + 10), Color(255, 255, 255), 1, 1)
 
         --Icons--
 
         --Job--
-        surface.SetMaterial(Material(icons[2]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 150 - 9), 18, 18)
+        draw.SimpleText(utf8.char(0xe8f9), "MaterialIcons", padding + margin - 20, (ScrH() - padding - 120), team.GetColor(ply:Team()), 1, 1)
 
         --Money--
-        surface.SetMaterial(Material(icons[3]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 120 - 8), 18, 18)
+        draw.SimpleText(utf8.char(0xe850), "MaterialIcons", padding + margin - 20, (ScrH() - padding - 90), Color(243, 156, 18), 1, 1)
 
         --Salary--
-        surface.SetMaterial(Material(icons[4]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 90 - 7), 18, 18)
-
+        draw.SimpleText(utf8.char(0xe227), "MaterialIcons", padding + margin + walletWidth + 20, (ScrH() - padding - 90), Color(46, 204, 113), 1, 1)
+        
         --Health--
-        surface.SetMaterial(Material(icons[5]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 60 - 6), 18, 18)
-
+        draw.SimpleText(utf8.char(0xe87d), "MaterialIcons", padding + margin - 20, (ScrH() - padding - 60), Color(231, 76, 60), 1, 1)
+        
         --Armour--
-        surface.SetMaterial(Material(icons[6]))
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(padding + margin - 28, (ScrH() - padding - 30 - 5), 18, 18)
-
+        draw.SimpleText(utf8.char(0xe32a), "MaterialIcons", padding + margin - 20, (ScrH() - padding - 30), Color(52, 152, 219), 1, 1)
+        
         --License--
         if ply:getDarkRPVar("HasGunlicense") then
-            surface.SetMaterial(Material(icons[7]))
-            surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(padding + margin + 270, (ScrH() - padding - 90 - 7), 18, 18)
-        else
-            surface.SetMaterial(Material(icons[7]))
-            surface.SetDrawColor(0, 0, 0, 255)
-            surface.DrawTexturedRect(padding + margin + 270, (ScrH() - padding - 90 - 7), 18, 18)
+            draw.SimpleText(utf8.char(0xe051), "MaterialIcons", padding + margin + 280, (ScrH() - padding - 120), Color(255, 255, 255), 1, 1)
         end
-
+        
         --Wanted--
         if ply:isWanted() then
-            surface.SetMaterial(Material(icons[8]))
-            surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(padding + margin + 235, (ScrH() - padding - 90 - 6), 18, 18)
-        else
-            surface.SetMaterial(Material(icons[8]))
-            surface.SetDrawColor(0, 0, 0, 255)
-            surface.DrawTexturedRect(padding + margin + 235, (ScrH() - padding - 90 - 6), 18, 18)
+            draw.SimpleText(utf8.char(0xe417), "MaterialIcons", padding + margin + 245, (ScrH() - padding - 120), Color(192, 57, 43), 1, 1)
         end
 
         --Ammo--
