@@ -51,12 +51,11 @@ function scoreboard:show()
     local plyPanel = vgui.Create("DListView", menu)
     plyPanel:Dock(FILL)
     plyPanel:DockMargin(25, 55, 25, 25)
-    plyPanel:AddColumn("Player", 1)
-    plyPanel:AddColumn("Job", 2)
-    plyPanel:AddColumn("Money", 3)
-    plyPanel:AddColumn("Kills", 4)
-    plyPanel:AddColumn("Deaths", 5)
-    plyPanel:AddColumn("Ping", 6)
+    plyPanel:AddColumn("Player", 1):SetWidth(500)
+    plyPanel:AddColumn("Job", 2):SetWidth(500)
+    plyPanel:AddColumn("Kills", 3)
+    plyPanel:AddColumn("Deaths", 4)
+    plyPanel:AddColumn("Ping", 5)
     plyPanel:SetHeaderHeight(40)
     plyPanel:SetDataHeight(40)
 
@@ -64,13 +63,8 @@ function scoreboard:show()
     end
 
     local plyPanelBar = plyPanel.VBar
+    plyPanelBar:SetHideButtons(true)
     plyPanelBar.Paint = function(s, width, height)
-        draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
-    end
-    plyPanelBar.btnUp.Paint = function(s, width, height)
-        draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
-    end
-    plyPanelBar.btnDown.Paint = function(s, width, height)
         draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
     end
     plyPanelBar.btnGrip.Paint = function(s, width, height)
@@ -85,15 +79,15 @@ function scoreboard:show()
         end
 
         local job = team.GetName(v:Team()) or ""
-        local money = "£" .. string.Comma(v:getDarkRPVar("money") or 0)
         local kills = math.Clamp(v:Frags() or 0, 0, 99)
         local deaths = math.Clamp(v:Deaths() or 0, 0, 99)
         local ping = math.Clamp(v:Ping() or 0, 1, 999)
 
-        plyinfo.main = plyPanel:AddLine(name, job, money, kills, deaths, ping)
+        plyinfo.main = plyPanel:AddLine(name, job, kills, deaths, ping)
         plyinfo.main.Colour = team.GetColor(v:Team())
     end
 
+    local colWidth = {}
     for k, v in pairs(plyPanel.Columns) do
         local text = v.Header:GetText()
         v.Header:SetText("")
@@ -101,18 +95,26 @@ function scoreboard:show()
         v.Header.Paint = function(s, width, height)
             draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 255))
             draw.SimpleText(text, "Trebuchet24", width / 2, height / 2, Color(255, 255, 255, 255), 1, 1)
+            colWidth[text] = width
         end
     end
-
+    
     for k, v in pairs(plyPanel.Lines) do
         v.Paint = function(s, width, height)
-            draw.RoundedBox(0, 0, 0, width, height, v.Colour)
+            width = 0
+
+            table.foreach(colWidth, function(_, w)
+                width = width + w
+            end)
+
+            draw.RoundedBox(0, 0, 0, width - 1, height, v.Colour)
         end
 
+        
         for _k, _v in pairs(v.Columns) do
             local text = _v:GetText()
             _v:SetText("")
-
+            
             _v.Paint = function(s, width, height)
                 draw.SimpleText(text, "Trebuchet24", width / 2, height / 2, Color(255, 255, 255, 255), 1, 1)
             end
