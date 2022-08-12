@@ -6,7 +6,8 @@ end
 
 include("icons.lua")
 
-surface.CreateFont("MaterialIcons", {
+
+surface.CreateFont("MaterialIconsList", {
 	font = "Material Icons",
 	size = 32,
 	weight = 300,
@@ -23,6 +24,7 @@ surface.CreateFont("IconMenu24", {
 })
 
 concommand.Add("list_icons", function()
+	local icons = {}
 	local ICONLIST = ICONLIST or {}
 
 	ICONLIST.Main = vgui.Create("DFrame")
@@ -75,11 +77,11 @@ concommand.Add("list_icons", function()
 
 	ICONLIST.Search.OnChange = function(s)
 		if timer.Exists("UpdateIconList") then
-			timer.Adjust("UpdateIconList", .5, 1, function()
+			timer.Adjust("UpdateIconList", 0.5, 1, function()
 				UpdateIconList()
 			end)
 		else
-			timer.Create("UpdateIconList", .5, 1, function()
+			timer.Create("UpdateIconList", 0.5, 1, function()
 				UpdateIconList()
 			end)
 		end
@@ -91,32 +93,45 @@ concommand.Add("list_icons", function()
 		icon:SetSize(ICONLIST.Icons:GetWide(), 50)
 		icon.Paint = function(s, w, h)
 			draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20))
-			draw.SimpleText(IconCode, "MaterialIcons", w * .05, h * .5, Color(236, 240, 241), 1, 1)
+			draw.SimpleText(IconCode, "MaterialIconsList", w * .05, h * .5, Color(236, 240, 241), 1, 1)
 			draw.SimpleText(IconName, "IconMenu24", w * .5, h * .5, Color(236, 240, 241), 1, 1)
 		end
 		icon.DoClick = function(s)
 			SetClipboardText(IconName)
 		end
+
+		table.insert(icons, icon)
 	end
 
 	function UpdateIconList()
-		for k, v in pairs(ICONLIST.Icons:GetChildren()) do
-			v:Remove()
-		end
+		ICONLIST.Icons:Remove()
+		ICONLIST.Icons = nil
+
+		ICONLIST.Icons = ICONLIST.List:Add("DIconLayout")
+		ICONLIST.Icons:Dock(FILL)
+		ICONLIST.Icons:SetSize(ICONLIST.List:GetWide(), ICONLIST.List:GetTall() * 1000)
+		ICONLIST.Icons:SetLayoutDir(LEFT)
+		ICONLIST.Icons:SetSpaceX(10)
+		ICONLIST.Icons:SetSpaceY(10)
+
+		local search = ICONLIST.Search:GetValue() or ""
 
 		for IconName, IconCode in SortedPairs(MI) do
-			if (not (string.find(IconName, ICONLIST.Search:GetValue()) == nil)) or (ICONLIST.Search:GetValue() == "") then
+			if not not string.match(IconName, search) or search == "" then
 				local icon = ICONLIST.Icons:Add("DButton")
 				icon:SetText("")
 				icon:SetSize(ICONLIST.Icons:GetWide(), 50)
+				icon.Value = IconName
 				icon.Paint = function(s, w, h)
 					draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20))
-					draw.SimpleText(IconCode, "MaterialIcons", w * .05, h * .5, Color(236, 240, 241), 1, 1)
+					draw.SimpleText(IconCode, "MaterialIconsList", w * .05, h * .5, Color(236, 240, 241), 1, 1)
 					draw.SimpleText(IconName, "IconMenu24", w * .5, h * .5, Color(236, 240, 241), 1, 1)
 				end
 				icon.DoClick = function(s)
-					SetClipboardText(IconName)
+					SetClipboardText(s.Value)
 				end
+				
+				table.insert(icons, icon)
 			end
 		end
 	end
