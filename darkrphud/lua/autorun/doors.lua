@@ -24,17 +24,12 @@ elseif CLIENT then
         "icon16/lock_open.png"
     }
 
-    local doormodels = {
-        "models/props_c17/door01_left.mdl",
-        "models/props_doors/door03_slotted_left.mdl"
-    }
-
     surface.CreateFont(
         "DoorFont",
         {
             font = "Trebuchet",
             extended = false,
-            size = 1000,
+            size = 72,
             weight = 600,
             blursize = 0,
             scanlines = 0,
@@ -50,15 +45,26 @@ elseif CLIENT then
         }
     )
 
-    hook.Remove("PostDrawOpaqueRenderables", "doors")
+    surface.CreateFont("MaterialIcons", {
+        font = "Material Icons",
+        size = 72,
+        weight = 300,
+        antialias = true,
+        outline = false,
+        extended = true,
+    })
+
+    hook.Remove("PostDrawTranslucentRenderables", "doors")
     hook.Add(
-        "PostDrawOpaqueRenderables",
+        "PostDrawTranslucentRenderables",
         "doors",
         function()
             local ply = LocalPlayer()
 
-            for k, v in pairs(ents.GetAll()) do
-                if v:IsValid() and v:isDoor() and (v:GetClass() == "func_door" or v:GetClass() == "prop_door_rotating" or v:GetClass() == "func_door_rotating") and ply:GetPos():Distance(v:GetPos()) < 300 and (v:GetModel() == doormodels[1] or v:GetModel() == doormodels[2]) then
+            for _, v in ipairs(ents.GetAll()) do
+                if not v:getDoorData() or not v:isDoor() then continue end
+
+                if  ply:GetPos():Distance(v:GetPos()) < 300 then
                     local alpha = math.Clamp(255 - (((ply:GetPos():Distance(v:GetPos()) - 60) / 200) * 255), 0, 255)
 
                     local pos = v:GetPos()
@@ -70,7 +76,7 @@ elseif CLIENT then
                     ang:RotateAroundAxis(v:GetRight(), 90)
                     ang:RotateAroundAxis(v:GetForward(), 90)
 
-                    cam.Start3D2D(pos + (v:GetForward() * -1.5) + (v:GetRight() * -(v:OBBMaxs().y / 2)), ang, 0.03)
+                    cam.Start3D2D(pos + (v:GetForward() * -1.5) + (v:GetRight() * -(v:OBBMaxs().y / 2)), ang, 0.045)
 
                     cam.IgnoreZ(false)
 
@@ -111,20 +117,16 @@ elseif CLIENT then
 
                         if v:GetNWBool("lockstatus") == true then
                             surface.SetFont("DoorFont")
-
+                            
                             local width, height = surface.GetTextSize(v:getDoorOwner():Nick())
-
-                            surface.SetMaterial(Material(locked[1]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            
+                            draw.SimpleText(utf8.char(0xe897), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         else
                             surface.SetFont("DoorFont")
-
+                            
                             local width, height = surface.GetTextSize(v:getDoorOwner():Nick())
-
-                            surface.SetMaterial(Material(locked[2]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            
+                            draw.SimpleText(utf8.char(0xe898), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         end
                     elseif v:getKeysDoorGroup() then
                         draw.SimpleText(v:getKeysDoorGroup(), "DoorFont", 0, 0, Color(255, 255, 255, alpha), 1, 1)
@@ -166,17 +168,13 @@ elseif CLIENT then
 
                             local width, height = surface.GetTextSize(v:getKeysDoorGroup())
 
-                            surface.SetMaterial(Material(locked[1]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe897), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         else
                             surface.SetFont("DoorFont")
 
                             local width, height = surface.GetTextSize(v:getKeysDoorGroup())
 
-                            surface.SetMaterial(Material(locked[2]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe898), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         end
                     else
                         draw.SimpleText("Press 'F2' to own", "DoorFont", 0, 0, Color(255, 255, 255, alpha), 1, 1)
@@ -186,7 +184,7 @@ elseif CLIENT then
 
                     ang:RotateAroundAxis(v:GetUp(), 180)
 
-                    cam.Start3D2D(pos + (v:GetForward() * 1.5) - (v:GetRight() * (v:OBBMaxs().y / 2)), ang, 0.03)
+                    cam.Start3D2D(pos + (v:GetForward() * 1.5) - (v:GetRight() * (v:OBBMaxs().y / 2)), ang, 0.045)
 
                     cam.IgnoreZ(false)
 
@@ -230,17 +228,13 @@ elseif CLIENT then
 
                             local width, height = surface.GetTextSize(v:getDoorOwner():Nick())
 
-                            surface.SetMaterial(Material(locked[1]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe897), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         else
                             surface.SetFont("DoorFont")
 
                             local width, height = surface.GetTextSize(v:getDoorOwner():Nick())
 
-                            surface.SetMaterial(Material(locked[2]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe898), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         end
                     elseif v:getKeysDoorGroup() then
                         draw.SimpleText(v:getKeysDoorGroup(), "DoorFont", 0, 0, Color(255, 255, 255, alpha), 1, 1)
@@ -282,17 +276,13 @@ elseif CLIENT then
 
                             local width, height = surface.GetTextSize(v:getKeysDoorGroup())
 
-                            surface.SetMaterial(Material(locked[1]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe897), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         else
                             surface.SetFont("DoorFont")
 
                             local width, height = surface.GetTextSize(v:getKeysDoorGroup())
 
-                            surface.SetMaterial(Material(locked[2]))
-                            surface.SetDrawColor(255, 255, 255, alpha)
-                            surface.DrawTexturedRect(((width * -0.5) - (64) - (30)), (-32), 64, 64)
+                            draw.SimpleText(utf8.char(0xe898), "MaterialIcons", 0, -80, Color(255, 255, 255), 1, 1)
                         end
                     else
                         draw.SimpleText("Press 'F2' to own", "DoorFont", 0, 0, Color(255, 255, 255, alpha), 1, 1)
